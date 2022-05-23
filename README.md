@@ -1,2 +1,2 @@
-# robot-github-access
-this is the access layer to recieve the webhook message of github and dispatch them to the corresponding robots.
+# robot-github-hook-dispatcher
+This is the dispatcher that receives gitee's webhook messages and distributes them to the corresponding bots.
