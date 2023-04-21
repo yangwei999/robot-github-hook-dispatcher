@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/google/go-github/v36/github"
-	"github.com/opensourceways/community-robot-lib/githubclient"
-	"github.com/opensourceways/community-robot-lib/mq"
+	"github.com/opensourceways/kafka-lib/mq"
+	"github.com/opensourceways/robot-github-lib/client"
 	"github.com/sirupsen/logrus"
 )
 
@@ -61,22 +61,22 @@ func (d *dispatcher) dispatch(eventType string, payload []byte, h http.Header, l
 
 	switch hook := hook.(type) {
 	case *github.IssuesEvent:
-		org, repo = githubclient.GetOrgRepo(hook.GetRepo())
+		org, repo = client.GetOrgRepo(hook.GetRepo())
 	case *github.IssueCommentEvent:
-		org, repo = githubclient.GetOrgRepo(hook.GetRepo())
+		org, repo = client.GetOrgRepo(hook.GetRepo())
 	case *github.PullRequestEvent:
-		org, repo = githubclient.GetOrgRepo(hook.GetRepo())
+		org, repo = client.GetOrgRepo(hook.GetRepo())
 	case *github.PullRequestReviewEvent:
-		org, repo = githubclient.GetOrgRepo(hook.GetRepo())
+		org, repo = client.GetOrgRepo(hook.GetRepo())
 	case *github.PullRequestReviewCommentEvent:
-		org, repo = githubclient.GetOrgRepo(hook.GetRepo())
+		org, repo = client.GetOrgRepo(hook.GetRepo())
 	case *github.PushEvent:
 		org = hook.GetRepo().GetOwner().GetLogin()
 		repo = hook.GetRepo().GetName()
 	case *github.StatusEvent:
-		org, repo = githubclient.GetOrgRepo(hook.GetRepo())
+		org, repo = client.GetOrgRepo(hook.GetRepo())
 	case *github.CommitCommentEvent:
-		org, repo = githubclient.GetOrgRepo(hook.GetRepo())
+		org, repo = client.GetOrgRepo(hook.GetRepo())
 	default:
 		l.Debug("Ignoring unknown event type")
 		return nil

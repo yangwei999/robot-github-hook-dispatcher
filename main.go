@@ -7,13 +7,12 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/opensourceways/community-robot-lib/config"
-	"github.com/opensourceways/community-robot-lib/interrupts"
-	"github.com/opensourceways/community-robot-lib/kafka"
-	"github.com/opensourceways/community-robot-lib/logrusutil"
-	"github.com/opensourceways/community-robot-lib/mq"
-	liboptions "github.com/opensourceways/community-robot-lib/options"
-	"github.com/opensourceways/community-robot-lib/utils"
+	"github.com/opensourceways/kafka-lib/kafka"
+	"github.com/opensourceways/server-common-lib/config"
+	"github.com/opensourceways/server-common-lib/interrupts"
+	"github.com/opensourceways/server-common-lib/logrusutil"
+	liboptions "github.com/opensourceways/server-common-lib/options"
+	"github.com/opensourceways/server-common-lib/utils"
 	"github.com/sirupsen/logrus"
 )
 
@@ -72,7 +71,7 @@ func main() {
 
 	defer kafka.Disconnect()
 
-	subscriber, err := kafka.Subscribe(o.topic, handleGiteeMessage(&d), mq.Queue(component))
+	subscriber, err := kafka.Subscribe(o.topic, component, handleGiteeMessage(&d))
 	if err != nil {
 		logrus.WithError(err).Fatal(fmt.Sprintf("error subscribe %s topic.", o.topic))
 	}

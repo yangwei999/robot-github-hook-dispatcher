@@ -3,9 +3,9 @@ package main
 import (
 	"errors"
 
-	"github.com/opensourceways/community-robot-lib/config"
-	"github.com/opensourceways/community-robot-lib/kafka"
-	"github.com/opensourceways/community-robot-lib/mq"
+	"github.com/opensourceways/kafka-lib/kafka"
+	"github.com/opensourceways/kafka-lib/mq"
+	"github.com/opensourceways/server-common-lib/config"
 	"github.com/sirupsen/logrus"
 )
 
