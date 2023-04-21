@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/opensourceways/community-robot-lib/mq"
+	"github.com/opensourceways/kafka-lib/mq"
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
