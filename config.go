@@ -3,11 +3,14 @@ package main
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/opensourceways/kafka-lib/mq"
 	"k8s.io/apimachinery/pkg/util/sets"
 )
+
+var reIpPort = regexp.MustCompile(`^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}:[1-9][0-9]*$`)
 
 type configuration struct {
 	Config accessConfig `json:"access,omitempty"`

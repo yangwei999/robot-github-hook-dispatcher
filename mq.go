@@ -2,15 +2,12 @@ package main
 
 import (
 	"errors"
-	"regexp"
 
 	"github.com/opensourceways/kafka-lib/kafka"
 	"github.com/opensourceways/kafka-lib/mq"
 	"github.com/opensourceways/server-common-lib/config"
 	"github.com/sirupsen/logrus"
 )
-
-var reIpPort = regexp.MustCompile(`^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}:[1-9][0-9]*$`)
 
 func initMQ(agent *config.ConfigAgent) error {
 	cfg := &configuration{}
