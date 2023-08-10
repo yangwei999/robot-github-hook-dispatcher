@@ -1,12 +1,16 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/opensourceways/kafka-lib/mq"
 	"k8s.io/apimachinery/pkg/util/sets"
 )
+
+var reIpPort = regexp.MustCompile(`^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}:[1-9][0-9]*$`)
 
 type configuration struct {
 	Config accessConfig `json:"access,omitempty"`
@@ -25,7 +29,7 @@ type accessConfig struct {
 	// Plugins is a list available plugins.
 	Plugins []pluginConfig `json:"plugins,omitempty"`
 
-	Broker mq.MQConfig `json:"broker,omitempty"`
+	Broker string `json:"broker,omitempty"`
 }
 
 func (a accessConfig) validate() error {
@@ -49,6 +53,10 @@ func (a accessConfig) validate() error {
 				strings.Join(v.UnsortedList(), ", "),
 			)
 		}
+	}
+
+	if r := a.parseAddress(); len(r) == 0 {
+		return errors.New("invalid broker address")
 	}
 
 	return nil
@@ -101,6 +109,24 @@ func (a accessConfig) getDemux() map[string]eventsDemux {
 			if i, ok := plugins[p]; ok {
 				updateDemux(&a.Plugins[i], events)
 			}
+		}
+	}
+
+	return r
+}
+
+func (a accessConfig) mqConfig() mq.MQConfig {
+	return mq.MQConfig{
+		Addresses: a.parseAddress(),
+	}
+}
+
+func (a accessConfig) parseAddress() []string {
+	v := strings.Split(a.Broker, ",")
+	r := make([]string, 0, len(v))
+	for i := range v {
+		if reIpPort.MatchString(v[i]) {
+			r = append(r, v[i])
 		}
 	}
 

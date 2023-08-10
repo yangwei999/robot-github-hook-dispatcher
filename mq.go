@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func initMQ(agent config.ConfigAgent) error {
+func initMQ(agent *config.ConfigAgent) error {
 	cfg := &configuration{}
 	_, c := agent.GetConfig()
 
@@ -17,14 +17,8 @@ func initMQ(agent config.ConfigAgent) error {
 		cfg = v
 	}
 
-	tlsConfig, err := cfg.Config.Broker.TLSConfig.TLSConfig()
-	if err != nil {
-		return err
-	}
-
-	err = kafka.Init(
-		mq.Addresses(cfg.Config.Broker.Addresses...),
-		mq.SetTLSConfig(tlsConfig),
+	err := kafka.Init(
+		mq.Addresses(cfg.Config.mqConfig().Addresses...),
 		mq.Log(logrus.WithField("module", "broker")),
 		mq.ErrorHandler(errorHandler()),
 	)
