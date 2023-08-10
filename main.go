@@ -65,7 +65,7 @@ func main() {
 		agent: &agent,
 	}
 
-	if err := initMQ(configAgent); err != nil {
+	if err := initMQ(&configAgent); err != nil {
 		logrus.WithError(err).Fatal("Error init broker.")
 	}
 

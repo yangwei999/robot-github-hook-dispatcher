@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"regexp"
 
 	"github.com/opensourceways/kafka-lib/kafka"
 	"github.com/opensourceways/kafka-lib/mq"
@@ -9,7 +10,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func initMQ(agent config.ConfigAgent) error {
+var reIpPort = regexp.MustCompile(`^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}:[1-9][0-9]*$`)
+
+func initMQ(agent *config.ConfigAgent) error {
 	cfg := &configuration{}
 	_, c := agent.GetConfig()
 
@@ -17,14 +20,8 @@ func initMQ(agent config.ConfigAgent) error {
 		cfg = v
 	}
 
-	tlsConfig, err := cfg.Config.Broker.TLSConfig.TLSConfig()
-	if err != nil {
-		return err
-	}
-
-	err = kafka.Init(
-		mq.Addresses(cfg.Config.Broker.Addresses...),
-		mq.SetTLSConfig(tlsConfig),
+	err := kafka.Init(
+		mq.Addresses(cfg.Config.mqConfig().Addresses...),
 		mq.Log(logrus.WithField("module", "broker")),
 		mq.ErrorHandler(errorHandler()),
 	)
